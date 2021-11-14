@@ -4,6 +4,7 @@ import {
   crearVehiculo,
   editarVehiculo,
   eliminarVehiculo,
+  consultarVehiculo,
 } from "../../controllers/vehiculos/controller.js";
 
 const rutasVehiculo = Express.Router();
@@ -23,6 +24,11 @@ rutasVehiculo.route("/productos").get((req, res) => {
 
 rutasVehiculo.route("/productos").post((req, res) => {
   crearVehiculo(req.body, genercCallback(res));
+});
+
+rutasVehiculo.route("/productos/:id").get((req, res) => {
+  console.log("alguien hizo get en la ruta /vehiculos");
+  consultarVehiculo(req.params.id, genercCallback(res));
 });
 
 rutasVehiculo.route("/productos/:id").patch((req, res) => {
