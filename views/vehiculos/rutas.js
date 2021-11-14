@@ -2,6 +2,7 @@ import Express from "express";
 import {
   queryAllVehicles,
   crearVehiculo,
+  editarVehiculo,
 } from "../../controllers/vehiculos/controller.js";
 import { getDB } from "../../db/db.js";
 
@@ -26,30 +27,7 @@ rutasVehiculo.route("/productos/nuevo").post((req, res) => {
 });
 
 rutasVehiculo.route("/productos/editar").patch((req, res) => {
-  const edicion = req.body;
-  console.log(edicion);
-  const filtroVehiculo = { _id: new ObjectId(edicion.id) };
-  delete edicion.id;
-  const operacion = {
-    $set: edicion,
-  };
-  const baseDeDatos = getDB();
-  baseDeDatos
-    .collection("vehiculo")
-    .findOneAndUpdate(
-      filtroVehiculo,
-      operacion,
-      { upsert: true, returnOriginal: true },
-      (err, result) => {
-        if (err) {
-          console.error("error actualizando el vehiculo: ", err);
-          res.sendStatus(500);
-        } else {
-          console.log("actualizado con exito");
-          res.sendStatus(200);
-        }
-      }
-    );
+    editarVehiculo(req.body,genercCallback(res))
 });
 
 rutasVehiculo.route("/productos/eliminar").delete((req, res) => {
