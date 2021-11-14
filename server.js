@@ -1,7 +1,7 @@
 import Express from "express";
 import Cors from "cors";
 import dotenv from "dotenv";
-import { conectarBD, getDB } from "./db/db.js";
+import { conectarBD } from "./db/db.js";
 import rutasVehiculo from "./views/vehiculos/rutas.js";
 
 

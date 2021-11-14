@@ -1,53 +1,28 @@
 import Express from "express";
+import {
+  queryAllVehicles,
+  crearVehiculo,
+} from "../../controllers/vehiculos/controller.js";
 import { getDB } from "../../db/db.js";
 
 const rutasVehiculo = Express.Router();
 
+const genercCallback = (res) =>(err,result)=> {
+    if (err) {
+      res.status(500).send("Error consultando los vehiculos");
+    } else {
+      res.json(result);
+    }
+  };
+
+
 rutasVehiculo.route("/productos").get((req, res) => {
   console.log("alguien hizo get en la ruta /vehiculos");
-  const baseDeDatos = getDB();
-  baseDeDatos
-    .collection("vehiculo")
-    .find()
-    .limit(50)
-    .toArray((err, result) => {
-      if (err) {
-        res.status(500).send("Error consultando los vehiculos");
-      } else {
-        res.json(result);
-      }
-    });
+  queryAllVehicles(genercCallback(res));
 });
 
 rutasVehiculo.route("/productos/nuevo").post((req, res) => {
-  console.log(req);
-  const datosVehiculo = req.body;
-  console.log("llaves: ", Object.keys(datosVehiculo));
-  try {
-    if (
-      Object.keys(datosVehiculo).includes("nombre") &&
-      Object.keys(datosVehiculo).includes("marca") &&
-      Object.keys(datosVehiculo).includes("modelo")
-    ) {
-      const baseDeDatos = getDB();
-      // implementar código para crear vehículo en la BD
-      baseDeDatos
-        .collection("vehiculo")
-        .insertOne(datosVehiculo, (err, result) => {
-          if (err) {
-            console.error(err);
-            res.sendStatus(500);
-          } else {
-            console.log(result);
-            res.sendStatus(200);
-          }
-        });
-    } else {
-      res.sendStatus(500);
-    }
-  } catch {
-    res.sendStatus(500);
-  }
+    crearVehiculo(req.body,genercCallback(res));
 });
 
 rutasVehiculo.route("/productos/editar").patch((req, res) => {
