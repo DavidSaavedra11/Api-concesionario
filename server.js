@@ -1,9 +1,8 @@
 import Express from "express";
 import Cors from "cors";
 import dotenv from "dotenv";
-import { conectarBD, getDB } from ".db/db.js";
+import { conectarBD, getDB } from "./db/db.js";
 import { MongoClient, ObjectId } from "mongodb";
-
 
 dotenv.config({ path: "./.env" });
 
@@ -12,10 +11,10 @@ const app = Express();
 app.use(Express.json());
 app.use(Cors());
 
-app.get("/productos", (req, res) => {
-  console.log("alguien hizo get en la /productos");
-  const conexion = getDB();
-  conexion
+app.get("/vehiculos", (req, res) => {
+  console.log("alguien hizo get en la ruta /vehiculos");
+  const baseDeDatos = getDB();
+  baseDeDatos
     .collection("vehiculo")
     .find()
     .limit(50)
@@ -27,20 +26,19 @@ app.get("/productos", (req, res) => {
       }
     });
 });
-
-app.post("/productos/nuevo", (req, res) => {
+app.post("/vehiculos/nuevo", (req, res) => {
   console.log(req);
   const datosVehiculo = req.body;
-  console.log("Llaves: ", Object.keys(datosVehiculo));
+  console.log("llaves: ", Object.keys(datosVehiculo));
   try {
     if (
-      Object.keys(datosVehiculo).includes("nombre") &&
-      Object.keys(datosVehiculo).includes("marca") &&
-      Object.keys(datosVehiculo).includes("modelo")
+      Object.keys(datosVehiculo).includes("name") &&
+      Object.keys(datosVehiculo).includes("brand") &&
+      Object.keys(datosVehiculo).includes("model")
     ) {
-      const conexion = getDB();
-      // implementar codigo para crear vehiculo
-      conexion
+      const baseDeDatos = getDB();
+      // implementar código para crear vehículo en la BD
+      baseDeDatos
         .collection("vehiculo")
         .insertOne(datosVehiculo, (err, result) => {
           if (err) {
@@ -58,8 +56,7 @@ app.post("/productos/nuevo", (req, res) => {
     res.sendStatus(500);
   }
 });
-
-app.patch("/vehiculo/editar", (req, res) => {
+app.patch("/vehiculos/editar", (req, res) => {
   const edicion = req.body;
   console.log(edicion);
   const filtroVehiculo = { _id: new ObjectId(edicion.id) };
@@ -67,8 +64,8 @@ app.patch("/vehiculo/editar", (req, res) => {
   const operacion = {
     $set: edicion,
   };
-  const conexion = getDB();
-  conexion
+  const baseDeDatos = getDB();
+  baseDeDatos
     .collection("vehiculo")
     .findOneAndUpdate(
       filtroVehiculo,
@@ -86,23 +83,24 @@ app.patch("/vehiculo/editar", (req, res) => {
     );
 });
 
-app.delete("/vehiculo/eliminar", (req, res) => {
+app.delete("/vehiculos/eliminar", (req, res) => {
   const filtroVehiculo = { _id: new ObjectId(req.body.id) };
-  const conexion = getDB();
-  conexion.collection("vehiculo").deleteOne(filtroVehiculo, (err, result) => {
-    if (err) {
-      console.error(err);
-      res.sendStatus(500);
-    } else {
-      res.sendStatus(200);
-    }
-  });
+  const baseDeDatos = getDB();
+  baseDeDatos
+    .collection("vehiculo")
+    .deleteOne(filtroVehiculo, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(200);
+      }
+    });
 });
 
 const main = () => {
   return app.listen(process.env.PORT, () => {
-    console.log(`escuchando puerto 5000 ${process.env.PORT}`);
+    console.log(`escuchando puerto ${process.env.PORT}`);
   });
 };
-
 conectarBD(main);

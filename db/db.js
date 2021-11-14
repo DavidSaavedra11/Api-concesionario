@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 
-dotenv.config({ path: './.env' });
+dotenv.config({ path: "./.env" });
 
 const stringConexion = process.env.DATABASE_URL;
 
@@ -10,7 +10,7 @@ const client = new MongoClient(stringConexion, {
   useUnifiedTopology: true,
 });
 
-let conexion;
+let baseDeDatos;
 
 const conectarBD = (callback) => {
   client.connect((err, db) => {
@@ -18,14 +18,14 @@ const conectarBD = (callback) => {
       console.error("Error conectando a la base de datos");
       return "error";
     }
-    conexion = db.db("concesionario");
-    console.log("conexion exitosa");
+    baseDeDatos = db.db("concesionario");
+    console.log("baseDeDatos exitosa");
     return callback();
   });
 };
 
 const getDB = () => {
-  return conexion;
+  return baseDeDatos;
 };
 
 export { conectarBD, getDB };
