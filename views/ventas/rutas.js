@@ -23,6 +23,7 @@ rutasVenta.route("/ventas").get((req, res) => {
 });
 
 rutasVenta.route("/ventas").post((req, res) => {
+  console.log("alguien hizo post en la ruta /ventas");
   crearVenta(req.body, genercCallback(res));
 });
 

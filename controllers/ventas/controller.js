@@ -3,20 +3,12 @@ import { getDB } from "../../db/db.js";
 
 const queryAllSales = async (callback) => {
   const baseDeDatos = getDB();
-  await baseDeDatos.collection("venta").find().limit(50).toArray(callback);
+  await baseDeDatos.collection("venta").find({}).limit(50).toArray(callback);
 };
 
 const crearVenta = async (datosVenta, callback) => {
-  if (
-    Object.keys(datosVenta).includes("nombre") &&
-    Object.keys(datosVenta).includes("apellido") &&
-    Object.keys(datosVenta).includes("email")
-  ) {
-    const baseDeDatos = getDB();
-    await baseDeDatos.collection("venta").insertOne(datosVenta, callback);
-  } else {
-    return "error";
-  }
+  const baseDeDatos = getDB();
+  await baseDeDatos.collection("venta").insertOne(datosVenta, callback);
 };
 
 const consultarVenta = async (id, callback) => {

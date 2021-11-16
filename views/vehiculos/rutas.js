@@ -11,31 +11,31 @@ const rutasVehiculo = Express.Router();
 
 const genercCallback = (res) => (err, result) => {
   if (err) {
-    res.status(500).send("Error consultando los vehiculos");
+    res.status(500).json({error:err});
   } else {
     res.json(result);
   }
 };
 
-rutasVehiculo.route("/productos").get((req, res) => {
+rutasVehiculo.route("/vehiculos").get((req, res) => {
   console.log("alguien hizo get en la ruta /vehiculos");
   queryAllVehicles(genercCallback(res));
 });
 
-rutasVehiculo.route("/productos").post((req, res) => {
+rutasVehiculo.route("/vehiculos").post((req, res) => {
   crearVehiculo(req.body, genercCallback(res));
 });
 
-rutasVehiculo.route("/productos/:id").get((req, res) => {
+rutasVehiculo.route("/vehiculos/:id").get((req, res) => {
   console.log("alguien hizo get en la ruta /vehiculos");
   consultarVehiculo(req.params.id, genercCallback(res));
 });
 
-rutasVehiculo.route("/productos/:id").patch((req, res) => {
+rutasVehiculo.route("/vehiculos/:id").patch((req, res) => {
   editarVehiculo(req.params.id, req.body, genercCallback(res));
 });
 
-rutasVehiculo.route("/productos/:id").delete((req, res) => {
+rutasVehiculo.route("/vehiculos/:id").delete((req, res) => {
   eliminarVehiculo(req.params.id, genercCallback(res));
 });
 
